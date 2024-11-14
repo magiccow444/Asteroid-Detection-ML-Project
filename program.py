@@ -16,16 +16,25 @@ cat_cols = df.select_dtypes(include='category').columns
 df = df.drop(cat_cols, axis=1)
 X = df.drop(columns=['Hazardous', 'Close Approach Date', 'Orbiting Body', 'Orbit Determination Date', 'Equinox'])
 
+pca = PCA(n_components=2)
+X = pca.fit_transform(X)
+print(X)
+
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
 
 lr = LogisticRegression()
 lr.fit(X_train, y_train)
 print(lr.score(X_test, y_test))
 
-# print(X_train.shape)
-# print(y_train.shape)
+print(X_train.shape)
+print(y_train.shape)
 
-# plt.scatter(X_train, y_train)
+coefficients = np.polyfit(X_train[:, 0],  X_train[:, 1], 1)
+poly = np.poly1d(coefficients)
 
-# plt.show()
+plt.scatter(X_train[:, 0], X_train[:, 1])
+plt.plot(poly, color='red')
+plt.show()
+
+
 
